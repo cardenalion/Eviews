@@ -1,0 +1,41 @@
+' Sergio Andres Rivera Diaz  17/12/15
+' A continuacion vamos a llamar la base de Alvarez y Benzema y utilizarlo para replicar la estimacion de Laura 
+
+wfopen "D:\Sergio Rivera\Beveridge_ Alvarez_y_Benzema\Carpeta de Andr»s\Structural_VAR_in_EVIEWS\Base_SVAR"
+
+'Definimos los 6 vectores que vamos a utilzar luego en la estimacion del var estructural. 
+
+series c1
+series c2
+series c3
+series c4
+series c5
+series c6
+
+'Definimos lamuestra sobre la cual vamos a hacer la estimacion
+smpl  1976q1 2015q1
+
+' Hacemos la estimacion del var sin estructura
+
+var var_sar.ls 1 2 d(LN_u_X12 ) d(LN_V_X12 ) d(LN_PEA_X12 )
+
+' Despues de esto limpiamos el texto del var de la estiacion sin estructura para poder introducir las restricciones y posteriormente hacer las estimacion del VAR estructural.
+var_sar.cleartext(svar)
+
+' Restricciones del VAR
+var_sar.append(svar) @e1 = -C(1)*@u1 + 0.2514004*C(2)*@u2 + C(3)*@u3
+var_sar.append(svar) @e2 = C(4)*@u1 - C(2)*@u2
+var_sar.append(svar) @e3 = C(5)*@u3
+
+'Reestimacion  del VAR pero con estructura
+var_sar.svar(rtype=text)
+
+c1=c(1)
+c2=c(2)
+c3=c(3)
+c4=c(4)
+c5=c(5)
+c6=c(6)
+
+'Sacar las matrices de impulso respuesta, tambien los parametros asociados a los vectores de esta estimacion. La descomposicion de las matrices A y B (los parametros que ahi econtremos).
+

@@ -1,0 +1,29 @@
+' Sergio Andrés Rivera Díaz
+' A continuación  replicamos la fig 1 del paper: Pitfalls in the Use of Time as an Explanatory Variable in Regression. Nelson & Plosser 1982
+wfcreate(wf=Ejercicios_clase, page=Random_walk_E1) u 103
+'smpl 3 101 
+'for  !j=1 to 100 
+' iden(!j,!j) = 1
+
+matrix(100,1) simul = 0
+' Esta matriz está fuera del loop
+genr u = nrnd
+genr y = 0 
+genr t = 1
+smpl 2 103 
+genr y = y(-1)+u
+genr t = t + t(-1) 
+equation mkon.ls y  c  t
+
+genr res = resid
+delete mkon
+
+for  !j=1 to 100 
+equation eq_01.ls res res(-1)
+freeze(resul_auto_!j)  eq_01.ls res res(-!j)
+simul(!j,1) = @val(resul_auto_!j(9,2))
+delete eq_01
+delete resul_auto_!j
+next 
+
+'next
